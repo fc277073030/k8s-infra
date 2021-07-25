@@ -168,6 +168,7 @@ alertmanager:
     - name: 'null'
     templates:
     - '/etc/alertmanager/config/*.tmpl'
+
   ## Pass the Alertmanager configuration directives through Helm's templating
   ## engine. If the Alertmanager configuration contains Alertmanager templates,
   ## they'll need to be properly escaped so that they are not interpreted by
@@ -207,7 +208,7 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: true
+    enabled: false
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
@@ -219,17 +220,17 @@ alertmanager:
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: 
-      - alertmanager.fc277073030.com
+    hosts: []
+      # - alertmanager.domain.com
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    paths: 
-    - /
+    paths: []
+    # - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    pathType: ImplementationSpecific
+    # pathType: ImplementationSpecific
 
     ## TLS configuration for Alertmanager Ingress
     ## Secret must be manually created in the namespace
@@ -420,25 +421,25 @@ alertmanager:
 
     ## AlertmanagerConfigs to be selected to merge and configure Alertmanager with.
     ##
-    #alertmanagerConfigSelector: 
+    alertmanagerConfigSelector: {}
     ## Example which selects all alertmanagerConfig resources
     ## with label "alertconfig" with values any of "example-config" or "example-config-2"
     # alertmanagerConfigSelector:
-    #  matchExpressions:
+    #   matchExpressions:
     #     - key: alertconfig
     #       operator: In
     #       values:
-    #          - example
+    #         - example-config
     #         - example-config-2
     #
     ## Example which selects all alertmanagerConfig resources with label "role" set to "example-config"
-    alertmanagerConfigSelector:
-      matchLabels:
-        role: example-config
+    # alertmanagerConfigSelector:
+    #   matchLabels:
+    #     role: example-config
 
     ## Namespaces to be selected for AlertmanagerConfig discovery. If nil, only check own namespace.
     ##
-    #alertmanagerConfigNamespaceSelector: {}
+    alertmanagerConfigNamespaceSelector: {}
     ## Example which selects all namespaces
     ## with label "alertmanagerconfig" with values any of "example-namespace" or "example-namespace-2"
     # alertmanagerConfigNamespaceSelector:
@@ -450,9 +451,9 @@ alertmanager:
     #         - example-namespace-2
 
     ## Example which selects all namespaces with label "alertmanagerconfig" set to "enabled"
-    #alertmanagerConfigNamespaceSelector:
-    #  matchLabels:
-    #    alertmanagerconfig: enabled
+    # alertmanagerConfigNamespaceSelector:
+    #   matchLabels:
+    #     alertmanagerconfig: enabled
 
     ## Define Log Format
     # Use logfmt (default) or json logging
@@ -629,7 +630,7 @@ grafana:
   ingress:
     ## If true, Grafana Ingress will be created
     ##
-    enabled: true
+    enabled: false
 
     ## Annotations for Grafana Ingress
     ##
@@ -646,8 +647,7 @@ grafana:
     ##
     # hosts:
     #   - grafana.domain.com
-    hosts: 
-      - grafana.fc277073030.com
+    hosts: []
 
     ## Path for grafana ingress
     path: /
@@ -1769,7 +1769,7 @@ prometheus:
     #   - thanos-gateway.domain.com
 
   ingress:
-    enabled: true
+    enabled: false
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
@@ -1783,17 +1783,16 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: 
-      - prometheus.fc277073030.com
+    hosts: []
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: 
-    - /
+    paths: []
+    # - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    pathType: ImplementationSpecific
+    # pathType: ImplementationSpecific
 
     ## TLS configuration for Prometheus Ingress
     ## Secret must be manually created in the namespace

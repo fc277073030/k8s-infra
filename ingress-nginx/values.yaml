@@ -570,7 +570,8 @@ controller:
 
     serviceMonitor:
       enabled: true
-      additionalLabels: {"release=prometheus-operator", "app=kube-prometheus-stack", "role=alert-rules"}
+      additionalLabels:
+        release: prometheus-operator
       #  release: prometheus-operator
       #  app: kube-prometheus-stack
       #  role: alert-rules
