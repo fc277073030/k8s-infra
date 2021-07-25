@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: dinghook
+  namespace: monitoring
+  labels:
+    role: example-config
+#    alertmanagerconfig: enabled
+spec:
+  receivers:
+    - name: Critical
+      webhookConfigs:
+        - url: http://dingtalk-hook.monitoring.svc.cluster.local:5000
+          sendResolved: true
+  route:
+    groupBy: ["job"]
+    groupWait: 30s
+    groupInterval: 1m
+    repeatInterval: 2m
+    receiver: Critical
+    routes:
+      - receiver: Critical
+        match:
+          severity: critical
