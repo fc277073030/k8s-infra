@@ -149,7 +149,8 @@ controller:
   ## E.g. to specify the default SSL certificate you can use
   ## extraArgs:
   ##   default-ssl-certificate: "<namespace>/<secret_name>"
-  extraArgs: {}
+  extraArgs: 
+    enable-ssl-passthrough: true
 
   ## Additional environment variables to set
   extraEnvs: []
@@ -569,7 +570,7 @@ controller:
       # nodePort: ""
 
     serviceMonitor:
-      enabled: true
+      enabled: false
       additionalLabels:
         release: prometheus-operator
       #  release: prometheus-operator
@@ -589,7 +590,7 @@ controller:
       metricRelabelings: []
 
     prometheusRule:
-      enabled: true
+      enabled: false
       additionalLabels:
         release: prometheus-operator
       namespace: "monitoring"
