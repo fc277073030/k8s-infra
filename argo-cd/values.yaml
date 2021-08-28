@@ -10,6 +10,10 @@ global:
     repository: quay.io/argoproj/argocd
     tag: v2.1.0
     imagePullPolicy: IfNotPresent
+  ## Annotations applied to all pods
+  podAnnotations: {}
+  ## Labels applied to all pods
+  podLabels: {}
   securityContext: {}
   #  runAsUser: 999
   #  runAsGroup: 999
@@ -259,6 +263,23 @@ dex:
   ##
   podLabels: {}
 
+  ## Probes for Dex server
+  ## Supported from Dex >= 2.28.0
+  livenessProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  readinessProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
   serviceAccount:
     create: true
     name: argocd-dex-server
@@ -434,7 +455,7 @@ server:
 
   ## Additional command line arguments to pass to argocd-server
   ##
-  extraArgs:
+  extraArgs: 
     - --insecure
 
   ## Environment variables to pass to argocd-server
@@ -519,7 +540,7 @@ server:
   ## Certificate configuration
   certificate:
     enabled: false
-    domain: argocd.fc277073030.com
+    domain: argocd.example.com
     issuer:
       kind: # ClusterIssuer
       name: # letsencrypt
@@ -569,8 +590,11 @@ server:
     automountServiceAccountToken: true
 
   ingress:
-    enabled: false
-    annotations: {}
+    enabled: true
+    annotations: 
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     labels: {}
     ingressClassName: ""
 
@@ -579,8 +603,8 @@ server:
     ## Secrets must be manually created in the namespace
     ##
     hosts:
-      []
-      # - argocd.example.com
+      # []
+      - argocd.fc277073030.com
     paths:
       - /
     pathType: Prefix
@@ -599,10 +623,10 @@ server:
       #       port:
       #         name: use-annotation
     tls:
-      []
-      # - secretName: argocd-tls-certificate
-      #   hosts:
-      #     - argocd.example.com
+      # []
+      - secretName: argocd-secret
+        hosts:
+          - argocd.fc277073030.com
     https: false
   # dedicated ingress for gRPC as documented at
   # https://argoproj.github.io/argo-cd/operator-manual/ingress/
@@ -666,7 +690,7 @@ server:
   configEnabled: true
   config:
     # Argo CD's externally facing base URL (optional). Required when configuring SSO
-    url: https://argocd.fc277073030.com
+    url: https://argocd.example.com
     # Argo CD instance label key
     application.instanceLabelKey: argocd.argoproj.io/instance
     # repositories: |
@@ -1127,6 +1151,7 @@ configs:
 
     # Argo TLS Data.
     argocdServerTlsConfig:
+      # {}
       key: |
         -----BEGIN RSA PRIVATE KEY-----
         MIIEogIBAAKCAQEAqxzcU6Iz2DTMw+bNb0deM5zaitDyLMwGo0VDWy75uEM/Flmy
@@ -1155,6 +1180,7 @@ configs:
         O+Qg0W8g0vzt+cVgN5Yr5J32fdcH0So7773LP0sFFTrJoju2UMbnn/wXNXhY82nY
         1XZjt213j3nKDrUOpYX0WUkqHrhkF9QicMZJNhaOanzcJ5qZOio=
         -----END RSA PRIVATE KEY-----
+
       crt: |
         -----BEGIN CERTIFICATE-----
         MIIFiDCCBHCgAwIBAgIQDtoffA7oN9fNTNqODvKVzjANBgkqhkiG9w0BAQsFADBu
@@ -1215,12 +1241,6 @@ configs:
         sNE2DpRVMnL8J6xBRdjmOsC3N6cQuKuRXbzByVBjCqAA8t1L0I+9wXJerLPyErjy
         rMKWaBFLmfK/AHNF4ZihwPGOc7w6UHczBZXH5RFzJNnww+WnKuTPI0HfnVH8lg==
         -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   <cert data>
-      #   -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   <ca cert data>
-      #   -----END CERTIFICATE-----
 
     # Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     # `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
