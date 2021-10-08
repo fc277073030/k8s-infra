@@ -34,10 +34,12 @@ labels: {}
 
 ## Additional container arguments
 ##
-# extraArgs:
+extraArgs:
 #   - --enable-skip-login
 #   - --enable-insecure-login
-#   - --system-banner="Welcome to Kubernetes"
+  - --system-banner="Welcome FanChao"
+  - --token-ttl=43200
+
 
 ## Additional container environment variables
 ##
@@ -179,14 +181,14 @@ ingress:
   ## Must be provided if Ingress is enabled
   ##
   hosts:
-    - k8s-dashboard.arnoo.com
+    - k8s-dashboard.fc277073030.com
   ## Kubernetes Dashboard Ingress TLS configuration
   ## Secrets must be manually created in the namespace
   ##
   tls:
     - secretName: kubernetes-dashboard-tls
       hosts:
-        - k8s-dashboard.arnoo.com
+        - k8s-dashboard.fc277073030.com
 
 # Global dashboard settings
 settings:
